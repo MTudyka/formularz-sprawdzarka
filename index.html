@@ -4,162 +4,296 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Sprawdzarka</title>
+
   <style>
-  :root{
-    --bg:#0f172a;          /* tło strony */
-    --card:#111827;        /* karta formularza */
-    --border:#1f2937;
-    --text:#e5e7eb;
-    --muted:#9ca3af;
-    --primary:#6366f1;     /* indigo */
-    --primary-hover:#4f46e5;
-    --success:#22c55e;
-    --error:#ef4444;
-  }
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --border:#1f2937;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --primary:#6366f1;
+      --primary-hover:#4f46e5;
+      --success:#22c55e;
+      --error:#ef4444;
+    }
 
-  *{box-sizing:border-box}
+    *{box-sizing:border-box}
 
-  body{
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-    background: radial-gradient(1200px 600px at 10% -10%, #1e293b, transparent),
-                radial-gradient(800px 400px at 90% 10%, #312e81, transparent),
-                var(--bg);
-    color:var(--text);
-    min-height:100vh;
-    margin:0;
-    padding:40px 16px;
-  }
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 600px at 10% -10%, #1e293b, transparent),
+                  radial-gradient(800px 400px at 90% 10%, #312e81, transparent),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+      margin:0;
+      padding:40px 16px;
+    }
 
-  h1{
-    text-align:center;
-    margin-bottom:24px;
-    font-size:28px;
-    letter-spacing:.3px;
-  }
+    h1{
+      text-align:center;
+      margin:0 0 24px;
+      font-size:28px;
+      letter-spacing:.3px;
+    }
 
-  form{
-    max-width:520px;
-    margin:0 auto;
-    background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
-               var(--card);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:24px;
-    box-shadow:
-      0 20px 40px rgba(0,0,0,.35),
-      inset 0 1px 0 rgba(255,255,255,.05);
-  }
+    form{
+      max-width:520px;
+      margin:0 auto;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)),
+                 var(--card);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:24px;
+      box-shadow:
+        0 20px 40px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.05);
+    }
 
-  label{
-    display:block;
-    margin:14px 0 6px;
-    font-size:13px;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-  }
+    label{
+      display:block;
+      margin:14px 0 6px;
+      font-size:13px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
 
-  input{
-    width:100%;
-    padding:12px 14px;
-    border-radius:12px;
-    border:1px solid var(--border);
-    background:#020617;
-    color:var(--text);
-    outline:none;
-    transition:border .2s, box-shadow .2s, transform .05s;
-  }
+    input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#020617;
+      color:var(--text);
+      outline:none;
+      transition:border .2s, box-shadow .2s;
+    }
 
-  input::placeholder{color:#6b7280}
+    input::placeholder{color:#6b7280}
 
-  input:focus{
-    border-color:var(--primary);
-    box-shadow:0 0 0 3px rgba(99,102,241,.25);
-  }
+    input:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(99,102,241,.25);
+    }
 
-  button{
-    width:100%;
-    margin-top:20px;
-    padding:14px 16px;
-    border-radius:14px;
-    border:none;
-    cursor:pointer;
-    font-weight:600;
-    letter-spacing:.02em;
-    color:white;
-    background:linear-gradient(135deg, var(--primary), #22d3ee);
-    transition:transform .1s ease, box-shadow .2s ease, filter .2s ease;
-    box-shadow:0 10px 20px rgba(79,70,229,.35);
-  }
+    button{
+      width:100%;
+      margin-top:20px;
+      padding:14px 16px;
+      border-radius:14px;
+      border:none;
+      cursor:pointer;
+      font-weight:600;
+      letter-spacing:.02em;
+      color:white;
+      background:linear-gradient(135deg, var(--primary), #22d3ee);
+      transition:transform .1s ease, box-shadow .2s ease, filter .2s ease;
+      box-shadow:0 10px 20px rgba(79,70,229,.35);
+    }
 
-  button:hover{
-    filter:brightness(1.05);
-    box-shadow:0 14px 30px rgba(79,70,229,.45);
-  }
+    button:hover{
+      filter:brightness(1.05);
+      box-shadow:0 14px 30px rgba(79,70,229,.45);
+    }
 
-  button:active{
-    transform:translateY(1px) scale(.995);
-  }
+    button:active{transform:translateY(1px) scale(.995)}
+    button:disabled{
+      cursor:not-allowed;
+      opacity:.7;
+      filter:saturate(.8);
+    }
 
-  #msg{
-    margin-top:16px;
-    padding:12px 14px;
-    border-radius:12px;
-    font-size:14px;
-    display:none;
-  }
+    #msg{
+      margin-top:16px;
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:14px;
+      display:none;
+      border:1px solid transparent;
+    }
 
-  .ok{
-    display:block;
-    background:rgba(34,197,94,.12);
-    color:var(--success);
-    border:1px solid rgba(34,197,94,.35);
-  }
+    .ok{
+      display:block;
+      background:rgba(34,197,94,.12);
+      color:var(--success);
+      border-color:rgba(34,197,94,.35);
+    }
 
-  .err{
-    display:block;
-    background:rgba(239,68,68,.12);
-    color:var(--error);
-    border:1px solid rgba(239,68,68,.35);
-  }
+    .err{
+      display:block;
+      background:rgba(239,68,68,.12);
+      color:var(--error);
+      border-color:rgba(239,68,68,.35);
+    }
 
-  @media (max-width:480px){
-    h1{font-size:24px}
-    form{padding:18px}
-  }
-</style>
+    @media (max-width:480px){
+      h1{font-size:24px}
+      form{padding:18px}
+    }
 
+    /* === MODAL POTWIERDZENIA === */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.6);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:16px;
+    }
+    .overlay.hidden{display:none}
+
+    .modal{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)),
+                 #0b1220;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:22px;
+      max-width:520px;
+      width:100%;
+      box-shadow:0 30px 80px rgba(0,0,0,.6);
+      animation:pop .18s ease-out;
+    }
+
+    .modal h2{
+      margin:0 0 10px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+
+    #preview{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#020617;
+      color:var(--text);
+      font-size:14px;
+    }
+
+    #preview .row{
+      display:flex;
+      gap:10px;
+      padding:6px 0;
+      border-bottom:1px solid rgba(31,41,55,.6);
+    }
+    #preview .row:last-child{border-bottom:none}
+    #preview .k{
+      width:92px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      font-size:12px;
+      flex:0 0 auto;
+    }
+    #preview .v{
+      flex:1 1 auto;
+      word-break:break-word;
+    }
+
+    .modal .actions{
+      margin-top:14px;
+      display:flex;
+      gap:10px;
+    }
+
+    .modal .actions button{
+      margin-top:0;
+      width:100%;
+    }
+
+    @keyframes pop{
+      from{transform:scale(.97);opacity:0}
+      to{transform:scale(1);opacity:1}
+    }
+  </style>
 </head>
+
 <body>
   <h1>Sprawdzarka</h1>
 
   <form id="form">
     <label>domena</label>
-    <input name="domena" required>
+    <input name="domena" required placeholder="np. firma.pl">
 
     <label>ulica</label>
-    <input name="ulica" required>
+    <input name="ulica" required placeholder="np. Puławska 10">
 
     <label>miasto</label>
-    <input name="miasto" required>
+    <input name="miasto" required placeholder="np. Warszawa">
 
     <label>krs</label>
-    <input name="krs" required>
+    <input name="krs" required placeholder="np. 0000123456">
 
-    <button type="submit">Wyślij</button>
+    <button id="submitBtn" type="submit">Wyślij</button>
     <div id="msg"></div>
   </form>
 
+  <!-- MODAL -->
+  <div id="overlay" class="overlay hidden" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">✅ Dane zapisane w CRM</h2>
+      <div id="preview"></div>
+      <div class="actions">
+        <button id="close" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    const WEBHOOK_URL = "https://automation.getorizi.pl/webhook-test/form-google"; // Production URL
+    const WEBHOOK_URL = "https://automation.getorizi.pl/webhook-test/form-google";
 
     const form = document.getElementById("form");
     const msg = document.getElementById("msg");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const overlay = document.getElementById("overlay");
+    const preview = document.getElementById("preview");
+    const closeBtn = document.getElementById("close");
+
+    function showMsg(type, text){
+      msg.className = type;
+      msg.textContent = text;
+    }
+
+    function showModal(data){
+      const safe = (v) => (v ?? "").toString();
+
+      preview.innerHTML = `
+        <div class="row"><div class="k">Domena</div><div class="v">${safe(data.domena)}</div></div>
+        <div class="row"><div class="k">Ulica</div><div class="v">${safe(data.ulica)}</div></div>
+        <div class="row"><div class="k">Miasto</div><div class="v">${safe(data.miasto)}</div></div>
+        <div class="row"><div class="k">KRS</div><div class="v">${safe(data.krs)}</div></div>
+      `;
+
+      overlay.classList.remove("hidden");
+      overlay.setAttribute("aria-hidden", "false");
+    }
+
+    function hideModal(){
+      overlay.classList.add("hidden");
+      overlay.setAttribute("aria-hidden", "true");
+    }
+
+    closeBtn.addEventListener("click", hideModal);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) hideModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hideModal();
+    });
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      msg.className = "";
-      msg.textContent = "Wysyłam...";
+
+      msg.style.display = "block";
+      showMsg("", "Wysyłam...");
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wysyłam...";
 
       const data = Object.fromEntries(new FormData(form).entries());
 
@@ -172,12 +306,14 @@
 
         if (!r.ok) throw new Error("HTTP " + r.status);
 
-        msg.className = "ok";
-        msg.textContent = "OK — wysłane.";
+        showMsg("ok", "OK — wysłane. Dane będą widoczne w CRM.");
+        showModal(data);
         form.reset();
       } catch (err) {
-        msg.className = "err";
-        msg.textContent = "Błąd wysyłki: " + err.message;
+        showMsg("err", "Błąd wysyłki: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Wyślij";
       }
     });
   </script>
