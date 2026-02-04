@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sprawdzarka</title>
+  <style>
+    body{font-family:system-ui,Arial;max-width:720px;margin:40px auto;padding:0 16px}
+    label{display:block;margin:12px 0 6px}
+    input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
+    button{margin-top:16px;padding:12px 16px;border:0;border-radius:10px;cursor:pointer}
+    .ok{margin-top:12px}
+    .err{margin-top:12px}
+  </style>
+</head>
+<body>
+  <h1>Sprawdzarka</h1>
+
+  <form id="form">
+    <label>domena</label>
+    <input name="domena" required>
+
+    <label>ulica</label>
+    <input name="ulica" required>
+
+    <label>miasto</label>
+    <input name="miasto" required>
+
+    <label>krs</label>
+    <input name="krs" required>
+
+    <button type="submit">Wyślij</button>
+    <div id="msg"></div>
+  </form>
+
+  <script>
+    const WEBHOOK_URL = "https://automation.getorizi.pl/webhook-test/form-google"; // Production URL
+
+    const form = document.getElementById("form");
+    const msg = document.getElementById("msg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.className = "";
+      msg.textContent = "Wysyłam...";
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      try {
+        const r = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        if (!r.ok) throw new Error("HTTP " + r.status);
+
+        msg.className = "ok";
+        msg.textContent = "OK — wysłane.";
+        form.reset();
+      } catch (err) {
+        msg.className = "err";
+        msg.textContent = "Błąd wysyłki: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
