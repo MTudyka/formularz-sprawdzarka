@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Formularz + Nagrywanie</title>
+  <style>
+    :root{
+      --bg1:#0b1220;
+      --bg2:#151a35;
+      --card: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --accent:#5b7cfa;
+      --accent2:#22c3ff;
+      --danger:#ff4d4d;
+      --ok:#35d07f;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 30% 20%, rgba(91,124,250,.25), transparent 60%),
+        radial-gradient(900px 600px at 75% 35%, rgba(34,195,255,.20), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      padding:24px;
+    }
+    .wrap{width:min(720px, 100%)}
+    .title{
+      text-align:center;
+      font-weight:700;
+      letter-spacing:.3px;
+      font-size:28px;
+      margin:0 0 18px;
+      color:rgba(255,255,255,.90);
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      backdrop-filter: blur(10px);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    @media (max-width:720px){
+      .grid{grid-template-columns:1fr}
+    }
+    label{
+      display:block;
+      font-size:12px;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      color:var(--muted);
+      margin:2px 0 8px;
+    }
+    input, textarea{
+      width:100%;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      color:var(--text);
+      padding:12px 14px;
+      outline:none;
+      font-size:15px;
+    }
+    input::placeholder, textarea::placeholder{color: rgba(255,255,255,.35)}
+    input:focus, textarea:focus{
+      border-color: rgba(91,124,250,.65);
+      box-shadow: 0 0 0 4px rgba(91,124,250,.14);
+    }
+    textarea{min-height:96px; resize:vertical}
+    .row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      margin-top:16px;
+    }
+    .btns{display:flex; gap:10px; flex-wrap:wrap}
+    button{
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      cursor:pointer;
+      color:white;
+      font-weight:600;
+      letter-spacing:.2px;
+      min-width:160px;
+    }
+    .btn-primary{
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+    .btn-ghost{
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      color:rgba(255,255,255,.9);
+      min-width:auto;
+    }
+    .btn-danger{
+      background: linear-gradient(90deg, var(--danger), #ff7a7a);
+    }
+    button:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+    .status{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: rgba(255,255,255,.82);
+      font-size:14px;
+      flex: 1 1 auto;
+      min-width: 220px;
+    }
+    .dot{
+      width:10px; height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.35);
+      box-shadow:none;
+    }
+    .dot.rec{
+      background: var(--danger);
+      box-shadow: 0 0 0 6px rgba(255,77,77,.15);
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse{
+      0%{transform:scale(1)}
+      50%{transform:scale(1.15)}
+      100%{transform:scale(1)}
+    }
+    .small{
+      color: var(--muted);
+      font-size:12px;
+      margin-top:10px;
+      line-height:1.45;
+    }
+    .toast{
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      display:none;
+    }
+    .toast.ok{border-color: rgba(53,208,127,.35)}
+    .toast.err{border-color: rgba(255,77,77,.35)}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Formularz + nagrywanie</h1>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="krs">KRS</label>
+          <input id="krs" inputmode="numeric" placeholder="np. 0000123456" maxlength="10" />
+        </div>
+        <div>
+          <label for="phone">Telefon</label>
+          <input id="phone" inputmode="tel" placeholder="np. 501234567" />
+        </div>
+        <div style="grid-column:1/-1">
+          <label for="notes">Notatki (opcjonalnie)</label>
+          <textarea id="notes" placeholder="Dodatkowe info, kontekst rozmowy, itp."></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="status" id="statusBox">
+          <span class="dot" id="dot"></span>
+          <span id="statusText">Gotowe. Kliknij „Start nagrywania”.</span>
+          <span class="mono" id="timer" style="margin-left:auto; opacity:.85;">00:00</span>
+        </div>
+
+        <div class="btns">
+          <button class="btn-danger" id="recBtn">Start nagrywania</button>
+          <button class="btn-primary" id="sendBtn" disabled>Wyślij</button>
+          <button class="btn-ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+      </div>
+
+      <div class="toast" id="toast"></div>
+
+      <div class="small">
+        Wysyłka idzie do webhooka n8n jako <span class="mono">multipart/form-data</span>:
+        pola <span class="mono">krs</span>, <span class="mono">phone</span>, <span class="mono">notes</span> + plik <span class="mono">audio</span>.
+        Jeśli wysyłka nie działa, to prawie na pewno CORS po stronie webhooka.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================
+    // USTAW TU SWÓJ WEBHOOK N8N
+    // ==========================
+    const WEBHOOK_URL = "https://twoja-domena.pl/webhook/xyz";
+
+    // ======= Stan nagrywania =======
+    let mediaRecorder = null;
+    let streamRef = null;
+    let chunks = [];
+    let audioBlob = null;
+
+    // Timer
+    let t0 = 0;
+    let tick = null;
+
+    const recBtn = document.getElementById("recBtn");
+    const sendBtn = document.getElementById("sendBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const dot = document.getElementById("dot");
+    const statusText = document.getElementById("statusText");
+    const timerEl = document.getElementById("timer");
+    const toast = document.getElementById("toast");
+
+    const krsEl = document.getElementById("krs");
+    const phoneEl = document.getElementById("phone");
+    const notesEl = document.getElementById("notes");
+
+    function showToast(msg, type){
+      toast.className = "toast " + (type || "");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 4200);
+    }
+
+    function setStatus(text, isRec=false){
+      statusText.textContent = text;
+      dot.classList.toggle("rec", !!isRec);
+    }
+
+    function formatMMSS(ms){
+      const total = Math.floor(ms/1000);
+      const m = String(Math.floor(total/60)).padStart(2,'0');
+      const s = String(total%60).padStart(2,'0');
+      return `${m}:${s}`;
+    }
+
+    function startTimer(){
+      t0 = Date.now();
+      timerEl.textContent = "00:00";
+      tick = setInterval(() => {
+        timerEl.textContent = formatMMSS(Date.now() - t0);
+      }, 250);
+    }
+
+    function stopTimer(){
+      if (tick) clearInterval(tick);
+      tick = null;
+    }
+
+    function stopStream(){
+      if (streamRef) {
+        streamRef.getTracks().forEach(t => t.stop());
+        streamRef = null;
+      }
+    }
+
+    // Walidacja prosta (bez filozofii)
+    function validate(){
+      const krs = krsEl.value.trim();
+      const phone = phoneEl.value.trim();
+      if (!krs && !phone) {
+        return { ok:false, msg:"Wpisz KRS albo telefon (przynajmniej jedno)." };
+      }
+      if (krs && !/^\d{10}$/.test(krs)) {
+        return { ok:false, msg:"KRS ma mieć dokładnie 10 cyfr." };
+      }
+      return { ok:true };
+    }
+
+    recBtn.addEventListener("click", async () => {
+      try{
+        // Start
+        if (!mediaRecorder || mediaRecorder.state === "inactive") {
+          audioBlob = null;
+          chunks = [];
+          sendBtn.disabled = true;
+
+          streamRef = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+          // audio/webm zwykle działa w Chrome/Edge. Safari bywa problematyczne.
+          const opts = { mimeType: "audio/webm" };
+          mediaRecorder = new MediaRecorder(streamRef, opts);
+
+          mediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) chunks.push(e.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            audioBlob = new Blob(chunks, { type: "audio/webm" });
+            stopTimer();
+            stopStream();
+            setStatus("Nagranie gotowe. Kliknij „Wyślij”.", false);
+            sendBtn.disabled = false;
+          };
+
+          mediaRecorder.start();
+          setStatus("Nagrywanie…", true);
+          startTimer();
+          recBtn.textContent = "Stop nagrywania";
+          recBtn.className = "btn-danger";
+          return;
+        }
+
+        // Stop
+        if (mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          recBtn.textContent = "Start nagrywania";
+          return;
+        }
+
+      } catch (err){
+        console.error(err);
+        stopTimer();
+        stopStream();
+        setStatus("Błąd mikrofonu / brak uprawnień.", false);
+        showToast("Nie udało się uruchomić mikrofonu. Sprawdź uprawnienia w przeglądarce.", "err");
+      }
+    });
+
+    sendBtn.addEventListener("click", async () => {
+      const v = validate();
+      if (!v.ok){
+        showToast(v.msg, "err");
+        return;
+      }
+      if (!audioBlob){
+        showToast("Najpierw nagraj audio.", "err");
+        return;
+      }
+      if (!WEBHOOK_URL || WEBHOOK_URL.includes("twoja-domena.pl")){
+        showToast("Ustaw WEBHOOK_URL w pliku index.html.", "err");
+        return;
+      }
+
+      try{
+        sendBtn.disabled = true;
+        setStatus("Wysyłanie do n8n…", false);
+
+        const fd = new FormData();
+        fd.append("krs", krsEl.value.trim());
+        fd.append("phone", phoneEl.value.trim());
+        fd.append("notes", notesEl.value.trim());
+        fd.append("audio", audioBlob, `nagranie_${Date.now()}.webm`);
+
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          body: fd,
+        });
+
+        if (!res.ok){
+          const txt = await res.text().catch(() => "");
+          console.error("Webhook error:", res.status, txt);
+          setStatus("Błąd wysyłki (CORS / webhook / limit).", false);
+          showToast("Wysyłka nie przeszła. Najczęściej: CORS na webhooku albo limit uploadu.", "err");
+          sendBtn.disabled = false;
+          return;
+        }
+
+        setStatus("Wysłane. Możesz nagrać kolejne.", false);
+        showToast("Poszło do n8n.", "ok");
+        audioBlob = null;
+        chunks = [];
+        timerEl.textContent = "00:00";
+        sendBtn.disabled = true;
+
+      } catch (err){
+        console.error(err);
+        setStatus("Błąd sieci / CORS.", false);
+        showToast("Fetch zablokowany (CORS) albo brak połączenia.", "err");
+        sendBtn.disabled = false;
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      try{
+        if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
+      } catch {}
+      stopTimer();
+      stopStream();
+      chunks = [];
+      audioBlob = null;
+      timerEl.textContent = "00:00";
+      recBtn.textContent = "Start nagrywania";
+      sendBtn.disabled = true;
+      krsEl.value = "";
+      phoneEl.value = "";
+      notesEl.value = "";
+      setStatus("Gotowe. Kliknij „Start nagrywania”.", false);
+      showToast("Zresetowane.", "ok");
+    });
+  </script>
+</body>
+</html>
